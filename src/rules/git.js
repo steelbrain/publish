@@ -6,7 +6,7 @@ import Path from 'path'
 import IgnoredParser from 'gitignore-parser'
 import { readFile, fileExists, findAsync } from '../helpers'
 
-const debugValidate = require('debug')('publish:ignore:git')
+const debugValidate = require('debug')('publish:validate:git')
 
 export async function validate(directory: string): Promise {
   // Repository existance

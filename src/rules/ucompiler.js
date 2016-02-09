@@ -1,6 +1,6 @@
 'use strict'
 
-import { readFile, fileExists, findAsync, spawn } from '../helpers'
+import { readFile, fileExists, findAsync, spawn, shouldDump } from '../helpers'
 
 const debugPrepare = require('debug')('publish:prepare:ucompiler')
 
@@ -14,6 +14,10 @@ export async function prepare(directory: string): Promise {
   debugPrepare('Spawning UCompiler')
   const data = await spawn('ucompiler', ['go'])
   if (data.exitCode !== 0 && data.stdout.indexOf('Error') !== -1 || data.stderr.indexOf('Error') !== -1) {
+    if (shouldDump()) {
+      debugPrepare(`STDOUT: ${data.stdout}`)
+      debugPrepare(`STDERR: ${data.stderr}`)
+    }
     throw new Error('UCompiler exited with an error')
   }
   debugPrepare('UCompiler execution succeeded')

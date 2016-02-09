@@ -70,8 +70,11 @@ export async function findAsync(directory: string, name: string | Array<string>)
   return null
 }
 
+export function shouldDump(): boolean {
+  return global.__sb__publish === true
+}
+
 export function spawn(program: string, parameters: Array<string>, directory: string): Promise<{stdout: string, stderr: string, exitCode: number}> {
-  const shouldDump = global.__sb__publish === true
 
   return new Promise(function(resolve, reject) {
     const child = spawnProcess(program, parameters, {
@@ -80,15 +83,9 @@ export function spawn(program: string, parameters: Array<string>, directory: str
     const data = { stdout: [], stderr: [] }
     child.stdout.on('data', function(chunk) {
       data.stdout.push(chunk)
-      if (shouldDump) {
-        process.stdout.write(chunk)
-      }
     })
     child.stderr.on('data', function(chunk) {
       data.stderr.push(chunk)
-      if (shouldDump) {
-        process.stderr.write(chunk)
-      }
     })
     child.on('close', function(exitCode) {
       resolve({

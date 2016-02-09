@@ -4,8 +4,10 @@
 
 import Path from 'path'
 import IgnoredParser from 'gitignore-parser'
-import { readFile, fileExists, findAsync } from '../helpers'
-const debugValidate = require('debug')('publish:ignore:npm')
+import { readFile, fileExists, findAsync, spawn, shouldDump } from '../helpers'
+
+const debugValidate = require('debug')('publish:validate:npm')
+const debugPublish = require('debug')('publish:publish:npm')
 
 export async function validate(directory: string): Promise {
   // Manifest existance validation
@@ -50,4 +52,17 @@ export async function validate(directory: string): Promise {
   }
 
   debugValidate('All rules passed')
+}
+
+export async function publish(directory: string, bump: string): Promise {
+  debugPublish(`Gonna do 'npm version ${bump}'`)
+  const data = await spawn('npm', ['version', bump], directory)
+  if (data.exitCode !== 0 && data.stdout.indexOf('ERR') !== -1 || data.stderr.indexOf('ERR') !== -1) {
+    if (shouldDump()) {
+      debugPublish(`STDOUT: ${data.stdout}`)
+      debugPublish(`STDERR: ${data.stderr}`)
+    }
+    throw new Error('NPM exited with an error')
+  }
+  debugPublish(`NPM execution succeeded`)
 }
