@@ -1,6 +1,6 @@
 {
   "name": "publish-helpers",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "My personal publish helpers",
   "main": "lib/index.js",
   "bin": {
