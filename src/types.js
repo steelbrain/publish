@@ -3,6 +3,8 @@
 /* @flow */
 
 export type Publish$Rule = {
-  validate: ?((directory: string) => Promise<boolean>),
-  prepare: ?((directory: string) => Promise<boolean>)
+  name: string,
+  execute: ((directory: string) => Promise<boolean>)
 }
+
+export type Publish$Bump = 'major' | 'minor' | 'patch'
