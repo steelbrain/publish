@@ -3,6 +3,7 @@
 
 /* @flow */
 
+global.__sb__publish = true
 process.env.DEBUG = 'publish:*'
 
 if (parseInt(process.version.substr(1).split('.')[0]) < 5) {
