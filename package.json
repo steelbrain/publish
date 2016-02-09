@@ -7,6 +7,8 @@
     "publish": "./cli/publish.js"
   },
   "dependencies": {
+    "debug": "^2.2.0",
+    "gitignore-parser": "0.0.2",
     "sb-promisify": "^1.1.0"
   },
   "devDependencies": {
