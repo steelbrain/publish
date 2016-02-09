@@ -56,7 +56,17 @@ export async function validate(directory: string): Promise {
 
 export async function publish(directory: string, bump: string): Promise {
   debugPublish(`Gonna do 'npm version ${bump}'`)
-  const data = await spawn('npm', ['version', bump], directory)
+  let data
+  data = await spawn('npm', ['version', bump], directory)
+  if (data.exitCode !== 0 || data.stdout.indexOf('ERR') !== -1 || data.stderr.indexOf('ERR') !== -1) {
+    if (shouldDump()) {
+      debugPublish(`STDOUT: ${data.stdout}`)
+      debugPublish(`STDERR: ${data.stderr}`)
+    }
+    throw new Error('NPM exited with an error')
+  }
+  debugPublish(`Gonna do 'npm publish'`)
+  data = await spawn('npm', ['publish'], directory)
   if (data.exitCode !== 0 || data.stdout.indexOf('ERR') !== -1 || data.stderr.indexOf('ERR') !== -1) {
     if (shouldDump()) {
       debugPublish(`STDOUT: ${data.stdout}`)
