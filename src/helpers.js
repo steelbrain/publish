@@ -20,7 +20,7 @@ export const readFile = promisify(FS.readFile)
 export const writeFile = promisify(FS.writeFile)
 export const readdir = promisify(FS.readdir)
 
-export async function scanRules(directory: string, type: 'validate'): Promise<Array<Publish$Rule>> {
+export async function scanRules(directory: string, type: 'validate' | 'prepare'): Promise<Array<Publish$Rule>> {
   const rules = []
   const rulesDirectory = Path.join(__dirname, 'rules')
   for (const file of await readdir(rulesDirectory)) {
@@ -28,6 +28,8 @@ export async function scanRules(directory: string, type: 'validate'): Promise<Ar
     // $FlowIgnore: I know I'm requiring a dynamic path
     const rule = require(filePath)
     if (type === 'validate' && rule.validate) {
+      rules.push(rule)
+    } else if (type === 'prepare' && rule.prepare) {
       rules.push(rule)
     }
   }

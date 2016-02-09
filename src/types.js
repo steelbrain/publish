@@ -3,5 +3,6 @@
 /* @flow */
 
 export type Publish$Rule = {
-  validate: ((directory: string) => Promise<boolean>)
+  validate: ?((directory: string) => Promise<boolean>),
+  prepare: ?((directory: string) => Promise<boolean>)
 }
