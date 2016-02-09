@@ -13,7 +13,7 @@ export async function prepare(directory: string): Promise {
   debugPrepare(`UCompiler configuration found at ${config}`)
   debugPrepare('Spawning UCompiler')
   const data = await spawn('ucompiler', ['go'])
-  if (data.exitCode !== 0 && data.stdout.indexOf('Error') !== -1 || data.stderr.indexOf('Error') !== -1) {
+  if (data.exitCode !== 0 || data.stdout.indexOf('Error') !== -1 || data.stderr.indexOf('Error') !== -1) {
     if (shouldDump()) {
       debugPrepare(`STDOUT: ${data.stdout}`)
       debugPrepare(`STDERR: ${data.stderr}`)

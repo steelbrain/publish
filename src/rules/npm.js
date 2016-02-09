@@ -57,7 +57,7 @@ export async function validate(directory: string): Promise {
 export async function publish(directory: string, bump: string): Promise {
   debugPublish(`Gonna do 'npm version ${bump}'`)
   const data = await spawn('npm', ['version', bump], directory)
-  if (data.exitCode !== 0 && data.stdout.indexOf('ERR') !== -1 || data.stderr.indexOf('ERR') !== -1) {
+  if (data.exitCode !== 0 || data.stdout.indexOf('ERR') !== -1 || data.stderr.indexOf('ERR') !== -1) {
     if (shouldDump()) {
       debugPublish(`STDOUT: ${data.stdout}`)
       debugPublish(`STDERR: ${data.stderr}`)
