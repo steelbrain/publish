@@ -4,7 +4,6 @@
 
 import Path from 'path'
 import IgnoredParser from 'gitignore-parser'
-import { isMatch } from 'micromatch'
 import { readFile, fileExists, findAsync } from '../helpers'
 const debugValidate = require('debug')('publish:ignore:npm')
 
@@ -49,4 +48,6 @@ export async function validate(directory: string): Promise {
       throw new Error(`.idea exists and is not ignored by .npmignore`)
     }
   }
+  
+  debugValidate('All rules passed')
 }
