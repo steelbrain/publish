@@ -44,10 +44,13 @@ export async function validate(directory: string): Promise {
     const ignoreParser = IgnoredParser.compile(ignoreRules)
     const ignoreDirectory = Path.dirname(ignoreFile)
     const ideaExists = await fileExists(Path.join(Path.dirname(manifest), '.idea'))
+    const appleExists = await fileExists(Path.join(Path.dirname(manifest), '.DS_Store'))
     if (ignoreParser.denies(Path.relative(ignoreDirectory, mainFile))) {
       throw new Error(`Main file ${mainFile} ignored by .npmignore`)
     } else if (ideaExists && !ignoreParser.denies('.idea')) {
       throw new Error(`.idea exists and is not ignored by .npmignore`)
+    } else if (appleExists && !ignoreParser.denies('.DS_Store')) {
+      throw new Error(`.DS_Store exists and is not ignored by .npmignore`)
     }
   }
 
