@@ -11,6 +11,7 @@ Publish check if
  - manifest's main file is ignored by npm ignored
  - manifest's main file does not exist
  - .idea directory is found and is not ignored by npm or git
+ - .DS_Store file is found and is not ignored by npm or git
 
 #### Installation
 

@@ -6,7 +6,7 @@ import FS from 'fs'
 import Path from 'path'
 import promisify from 'sb-promisify'
 import { spawn as spawnProcess } from 'child_process'
-import { Publish$Rule } from './types'
+import type { Publish$Rule } from './types'
 
 export function fileExists(path: string): Promise<boolean> {
   return new Promise(function(resolve) {
