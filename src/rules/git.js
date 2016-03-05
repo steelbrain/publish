@@ -19,6 +19,7 @@ export async function validate(directory: string): Promise {
 
   // ignore validation
   const ideaExists = (await fileExists(Path.join(directory, '.idea'))) || (await fileExists(Path.join(repositoryRoot, '.idea')))
+  const appleExists = (await fileExists(Path.join(directory, '.DS_Store'))) || (await fileExists(Path.join(repositoryRoot, '.DS_Store')))
   const ignoreFile = await findAsync(directory, '.gitignore')
   if (!ignoreFile) {
     debugValidate(`No .gitignore found`)
@@ -31,6 +32,8 @@ export async function validate(directory: string): Promise {
     const ignoreDirectory = Path.dirname(ignoreFile)
     if (ideaExists && !ignoreParser.denies('.idea')) {
       throw new Error(`.idea exists and is not ignored by .gitignore`)
+    } else if (appleExists && !ignoreParser.denies('.DS_Store')) {
+      throw new Error(`.DS_Store exists and is not ignored by .gitignore`)
     }
   }
 
