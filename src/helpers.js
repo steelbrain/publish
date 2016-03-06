@@ -8,7 +8,7 @@ import promisify from 'sb-promisify'
 import { spawn as spawnProcess } from 'child_process'
 import type { Publish$Rule } from './types'
 
-export function fileExists(path: string): Promise<boolean> {
+export function exists(path: string): Promise<boolean> {
   return new Promise(function(resolve) {
     // $FlowIgnore: FS.R_OK not yet recognized
     FS.access(path, FS.R_OK, function(error) {
@@ -60,7 +60,7 @@ export async function findAsync(directory: string, name: string | Array<string>)
     }
     for (const fileName of names) {
       const filePath = Path.join(currentDir, fileName)
-      if (await fileExists(filePath)) {
+      if (await exists(filePath)) {
         return filePath
       }
     }

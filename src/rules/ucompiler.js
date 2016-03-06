@@ -1,6 +1,6 @@
 'use strict'
 
-import { readFile, fileExists, findAsync, spawn, shouldDump } from '../helpers'
+import { findAsync, spawn, shouldDump } from '../helpers'
 
 const debugPrepare = require('debug')('publish:prepare:ucompiler')
 

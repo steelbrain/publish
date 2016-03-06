@@ -4,7 +4,7 @@
 
 import Path from 'path'
 import IgnoredParser from 'gitignore-parser'
-import { readFile, fileExists, findAsync } from '../helpers'
+import { readFile, exists, findAsync } from '../helpers'
 
 const debugValidate = require('debug')('publish:validate:git')
 
@@ -18,8 +18,8 @@ export async function validate(directory: string): Promise {
   debugValidate(`Repository found at ${directory}`)
 
   // ignore validation
-  const ideaExists = (await fileExists(Path.join(directory, '.idea'))) || (await fileExists(Path.join(repositoryRoot, '.idea')))
-  const appleExists = (await fileExists(Path.join(directory, '.DS_Store'))) || (await fileExists(Path.join(repositoryRoot, '.DS_Store')))
+  const ideaExists = (await exists(Path.join(directory, '.idea'))) || (await exists(Path.join(repositoryRoot, '.idea')))
+  const appleExists = (await exists(Path.join(directory, '.DS_Store'))) || (await exists(Path.join(repositoryRoot, '.DS_Store')))
   const ignoreFile = await findAsync(directory, '.gitignore')
   if (!ignoreFile) {
     debugValidate(`No .gitignore found`)
