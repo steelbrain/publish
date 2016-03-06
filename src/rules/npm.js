@@ -4,7 +4,7 @@
 
 import Path from 'path'
 import IgnoredParser from 'gitignore-parser'
-import { readFile, fileExists, findAsync, spawn, shouldDump } from '../helpers'
+import { readFile, exists, findAsync, spawn, shouldDump } from '../helpers'
 
 const debugValidate = require('debug')('publish:validate:npm')
 const debugPublish = require('debug')('publish:publish:npm')
@@ -31,7 +31,7 @@ export async function validate(directory: string): Promise {
 
   // Main file validation
   const mainFile = Path.resolve(directory, manifestContents.main)
-  if (!await fileExists(mainFile)) {
+  if (!await exists(mainFile)) {
     throw new Error(`Main file ${mainFile} not found`)
   }
 
@@ -43,8 +43,8 @@ export async function validate(directory: string): Promise {
     const ignoreRules = (await readFile(ignoreFile)).toString()
     const ignoreParser = IgnoredParser.compile(ignoreRules)
     const ignoreDirectory = Path.dirname(ignoreFile)
-    const ideaExists = await fileExists(Path.join(Path.dirname(manifest), '.idea'))
-    const appleExists = await fileExists(Path.join(Path.dirname(manifest), '.DS_Store'))
+    const ideaExists = await exists(Path.join(Path.dirname(manifest), '.idea'))
+    const appleExists = await exists(Path.join(Path.dirname(manifest), '.DS_Store'))
     if (ignoreParser.denies(Path.relative(ignoreDirectory, mainFile))) {
       throw new Error(`Main file ${mainFile} ignored by .npmignore`)
     } else if (ideaExists && !ignoreParser.denies('.idea')) {
@@ -77,7 +77,7 @@ export async function publish(directory: string, bump: string): Promise {
     }
     throw new Error('NPM exited with an error')
   }
-  if (await fileExists(Path.join(directory, '.git'))) {
+  if (await exists(Path.join(directory, '.git'))) {
     debugPublish(`Gonna do 'git push origin HEAD --follow-tags'`)
     data = await spawn('git', ['push', 'origin', 'HEAD', '--follow-tags'], directory)
     if (data.exitCode !== 0) {
