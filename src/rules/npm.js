@@ -77,5 +77,16 @@ export async function publish(directory: string, bump: string): Promise {
     }
     throw new Error('NPM exited with an error')
   }
+  debugPublish(`Gonna do 'git push origin HEAD --follow-tags'`)
+  data = await spawn('git', ['push', 'origin', 'HEAD', '--follow-tags'], directory)
+  if (data.exitCode !== 0) {
+    if (shouldDump()) {
+      if (shouldDump()) {
+        debugPublish(`STDOUT: ${data.stdout}`)
+        debugPublish(`STDERR: ${data.stderr}`)
+      }
+      throw new Error('Git exited with an error')
+    }
+  }
   debugPublish(`NPM execution succeeded`)
 }
