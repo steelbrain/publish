@@ -1,3 +1,7 @@
+## 1.1.1
+
+- Include a nice commit message when publishing to npm
+
 ## 1.1.0
 
 - Add validation for `.DS_Store` files
