@@ -3,9 +3,10 @@
 import { findAsync, spawn, shouldDump } from '../helpers'
 
 const debugPrepare = require('debug')('publish:prepare:ucompiler')
+const CONFIG_NAMES = ['.ucompiler', '.ucompiler.json']
 
 export async function prepare(directory: string): Promise {
-  const config = await findAsync(directory, '.ucompiler')
+  const config = await findAsync(directory, CONFIG_NAMES)
   if (!config) {
     debugPrepare('No UCompiler configuration found, ignoring')
     return

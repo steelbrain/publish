@@ -1,3 +1,7 @@
+## 1.2.0
+
+- Support `.ucompiler.json` config
+
 ## 1.1.1
 
 - Include a nice commit message when publishing to npm
