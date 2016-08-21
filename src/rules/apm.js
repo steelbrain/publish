@@ -6,7 +6,7 @@ import { spawn, shouldDump } from '../helpers'
 
 const debugPublish = require('debug')('publish:publish:apm')
 
-export async function publish(directory: string, bump: string): Promise {
+export async function publish(directory: string, bump: string): Promise<void> {
   debugPublish(`Gonna do 'apm publish ${bump}'`)
   const data = await spawn('apm', ['publish', bump, '--color', 'false'], directory)
   if (

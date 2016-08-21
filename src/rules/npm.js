@@ -8,8 +8,9 @@ import { readFile, exists, findAsync, spawn, shouldDump } from '../helpers'
 
 const debugValidate = require('debug')('publish:validate:npm')
 const debugPublish = require('debug')('publish:publish:npm')
+const debugPrepare = require('debug')('publish:prepare:npm')
 
-export async function validate(directory: string): Promise {
+export async function validate(directory: string): Promise<void> {
   // Manifest existance validation
   const manifest = await findAsync(directory, 'package.json')
   if (!manifest) {
@@ -57,7 +58,41 @@ export async function validate(directory: string): Promise {
   debugValidate('All rules passed')
 }
 
-export async function publish(directory: string, bump: string): Promise {
+export async function prepare(directory: string): Promise<void> {
+  const manifest = await findAsync(directory, 'package.json')
+  if (!manifest) {
+    debugValidate('No manifest file found, ignoring')
+    return
+  }
+  // Manifest content validation
+  let manifestContents
+  try {
+    manifestContents = JSON.parse( await readFile(manifest) )
+  } catch (_) {
+    throw new Error('Malformed or invalid manifest')
+  }
+
+  let script
+  if (manifestContents.scripts && manifestContents.scripts.build) {
+    script = 'build'
+  } else if (manifestContents.scripts && manifestContents.scripts.compile) {
+    script = 'compile'
+  } else {
+    debugPrepare('build or compile scripts not found in manifest, ignoring')
+    return
+  }
+  debugPrepare(`Spawning npm with the ${script} script`)
+  const data = await spawn('npm', ['run', script], directory)
+  if (data.exitCode !== 0 || data.stdout.indexOf('ERR') !== -1 || data.stderr.indexOf('ERR') !== -1) {
+    if (shouldDump()) {
+      debugPublish(`STDOUT: ${data.stdout}`)
+      debugPublish(`STDERR: ${data.stderr}`)
+    }
+    throw new Error('NPM exited with an error')
+  }
+}
+
+export async function publish(directory: string, bump: string): Promise<void> {
   debugPublish(`Gonna do 'npm version ${bump}'`)
   let data
   data = await spawn('npm', ['version', bump, '-m', ':arrow_up: Bump version to %s'], directory)

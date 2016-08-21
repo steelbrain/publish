@@ -1,3 +1,7 @@
+## 2.0.0
+
+- Remove `ucompiler` support in favor of npm scripts
+
 ## 1.2.0
 
 - Support `.ucompiler.json` config

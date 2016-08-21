@@ -8,7 +8,7 @@ import { readFile, exists, findAsync } from '../helpers'
 
 const debugValidate = require('debug')('publish:validate:git')
 
-export async function validate(directory: string): Promise {
+export async function validate(directory: string): Promise<void> {
   // Repository existance
   const repositoryRoot = await findAsync(directory, '.git')
   if (!repositoryRoot) {
