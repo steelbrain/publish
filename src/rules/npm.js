@@ -44,14 +44,19 @@ export async function validate(directory: string): Promise<void> {
     const ignoreRules = (await readFile(ignoreFile)).toString()
     const ignoreParser = IgnoredParser.compile(ignoreRules)
     const ignoreDirectory = Path.dirname(ignoreFile)
+
     const ideaExists = await exists(Path.join(Path.dirname(manifest), '.idea'))
     const appleExists = await exists(Path.join(Path.dirname(manifest), '.DS_Store'))
+    const flowConfigExists = await exists(Path.join(Path.dirname(manifest), '.flowconfig'))
+
     if (ignoreParser.denies(Path.relative(ignoreDirectory, mainFile))) {
       throw new Error(`Main file ${mainFile} ignored by .npmignore`)
     } else if (ideaExists && !ignoreParser.denies('.idea')) {
       throw new Error(`.idea exists and is not ignored by .npmignore`)
     } else if (appleExists && !ignoreParser.denies('.DS_Store')) {
       throw new Error(`.DS_Store exists and is not ignored by .npmignore`)
+    } else if (flowConfigExists && !ignoreParser.denies('.flowconfig')) {
+      throw new Error(`.flowconfig exists and is not ignored by .npmignore`)
     }
   }
 
