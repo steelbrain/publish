@@ -44,10 +44,12 @@ export async function validate(directory: string): Promise<void> {
     const ignoreRules = (await readFile(ignoreFile)).toString()
     const ignoreParser = IgnoredParser.compile(ignoreRules)
     const ignoreDirectory = Path.dirname(ignoreFile)
+    const manifestDirectory = Path.dirname(manifest)
 
-    const ideaExists = await exists(Path.join(Path.dirname(manifest), '.idea'))
-    const appleExists = await exists(Path.join(Path.dirname(manifest), '.DS_Store'))
-    const flowConfigExists = await exists(Path.join(Path.dirname(manifest), '.flowconfig'))
+    const ideaExists = await exists(Path.join(manifestDirectory, '.idea'))
+    const appleExists = await exists(Path.join(manifestDirectory, '.DS_Store'))
+    const declsExists = await exists(Path.join(manifestDirectory, 'decls'))
+    const flowConfigExists = await exists(Path.join(manifestDirectory, '.flowconfig'))
 
     if (ignoreParser.denies(Path.relative(ignoreDirectory, mainFile))) {
       throw new Error(`Main file ${mainFile} ignored by .npmignore`)
@@ -55,6 +57,8 @@ export async function validate(directory: string): Promise<void> {
       throw new Error(`.idea exists and is not ignored by .npmignore`)
     } else if (appleExists && !ignoreParser.denies('.DS_Store')) {
       throw new Error(`.DS_Store exists and is not ignored by .npmignore`)
+    } else if (declsExists && !ignoreParser.denies('decls')) {
+      throw new Error(`decls exists and is not ignored by .npmignore`)
     } else if (flowConfigExists && !ignoreParser.denies('.flowconfig')) {
       throw new Error(`.flowconfig exists and is not ignored by .npmignore`)
     }
