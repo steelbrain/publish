@@ -1,6 +1,8 @@
 Publish
 ======
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/steelbrain/publish.svg)](https://greenkeeper.io/)
+
 A publisher that makes sure everything is all right before your modules are published.
 
 #### Checks performed
